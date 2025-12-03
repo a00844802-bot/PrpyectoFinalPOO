@@ -1,17 +1,17 @@
 #pragma once
 #include <string>
-#include <chrono>
-#include "Enums.h"
+using std::string;
 
-struct Venta {
-    int idVenta;
-    std::chrono::year_month_day fecha;
-    double montoUnitario;
+class Venta {
+public:
+    string idVenta;
+    string fecha;
+    double montoUnit;
     int cantidad;
-    Categoria categoria;
-    MetodoPago metodoPago;
-    int clienteID;
-    std::string pais;
+    string categoria;
+    string metodoPago;
+    string clienteID;
+    string pais;
     double costoEnvio;
     double descuento;
     double impuesto;
@@ -19,4 +19,21 @@ struct Venta {
     double totalConDescuento;
     double totalConImpuesto;
     double totalFinal;
+
+    Venta();
+    Venta(const string& idVenta,
+          const string& fecha,
+          double montoUnit,
+          int cantidad,
+          const string& categoria,
+          const string& metodoPago,
+          const string& clienteID,
+          const string& pais,
+          double costoEnvio,
+          double descuento,
+          double impuesto,
+          double subtotal,
+          double totalConDescuento,
+          double totalConImpuesto,
+          double totalFinal);
 };

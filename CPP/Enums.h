@@ -1,11 +1,20 @@
 #pragma once
 #include <string>
 
-enum class MetodoPago { Tarjeta, Contactless, Transferencia, Efectivo, Wallet };
-enum class Categoria {
-    Supermercado, Tecnologia, Moda, Hogar, Servicios, Gaming, Jugueteria,
-    Oficina, Mascotas, Salud, Bebidas, Automotriz
+enum class CategoriaProducto {
+    ELECTRONICA,
+    HOGAR,
+    JUGUETERIA,
+    ROPA,
+    OTROS
 };
 
-std::string metodoPagoToString(MetodoPago m);
-std::string categoriaToString(Categoria c);
+inline std::string categoriaToString(CategoriaProducto c) {
+    switch (c) {
+    case CategoriaProducto::ELECTRONICA: return "Electrónica";
+    case CategoriaProducto::HOGAR:       return "Hogar";
+    case CategoriaProducto::JUGUETERIA:  return "Juguetería";
+    case CategoriaProducto::ROPA:        return "Ropa";
+    default: return "Otros";
+    }
+}
