@@ -13,24 +13,49 @@ bool RegistroVentas::cargarCSV(const std::string& nombreArchivo) {
     }
 
     std::string linea;
-    getline(file, linea); // primera línea (encabezados)
+    getline(file, linea); // saltar encabezados
 
     while (getline(file, linea)) {
         std::stringstream ss(linea);
-        std::string idVenta, idProducto, cantidadStr, precioStr;
+        std::string idVenta, fecha, montoStr, cantStr, categoria, metodoPago,
+                    clienteID, pais, costoStr, descStr, impStr, subStr,
+                    totalDescStr, totalImpStr, totalFinStr;
 
+        // Leer las 15 columnas separadas por comas
         getline(ss, idVenta, ',');
-        getline(ss, idProducto, ',');
-        getline(ss, cantidadStr, ',');
-        getline(ss, precioStr, ',');
+        getline(ss, fecha, ',');
+        getline(ss, montoStr, ',');
+        getline(ss, cantStr, ',');
+        getline(ss, categoria, ',');
+        getline(ss, metodoPago, ',');
+        getline(ss, clienteID, ',');
+        getline(ss, pais, ',');
+        getline(ss, costoStr, ',');
+        getline(ss, descStr, ',');
+        getline(ss, impStr, ',');
+        getline(ss, subStr, ',');
+        getline(ss, totalDescStr, ',');
+        getline(ss, totalImpStr, ',');
+        getline(ss, totalFinStr, ',');
 
-        int cantidad = std::stoi(cantidadStr);
-        double precio = std::stod(precioStr);
+        // Convertir strings a números
+        double monto = std::stod(montoStr);
+        int cantidad = std::stoi(cantStr);
+        double costo = std::stod(costoStr);
+        double desc = std::stod(descStr);
+        double imp = std::stod(impStr);
+        double sub = std::stod(subStr);
+        double totalDesc = std::stod(totalDescStr);
+        double totalImp = std::stod(totalImpStr);
+        double totalFin = std::stod(totalFinStr);
 
-        Venta v(idVenta, idProducto, cantidad, precio);
+        Venta v(idVenta, fecha, monto, cantidad, categoria, metodoPago,
+                clienteID, pais, costo, desc, imp, sub, totalDesc,
+                totalImp, totalFin);
         ventas.push_back(v);
     }
 
+    file.close();
     return true;
 }
 
@@ -54,9 +79,9 @@ Venta RegistroVentas::ventaMaxima() const {
 void RegistroVentas::mostrarTodas() const {
     for (const auto& v : ventas) {
         std::cout << "ID: " << v.idVenta
-                  << "  Producto: " << v.idProducto
-                  << "  Cantidad: " << v.cantidad
-                  << "  Total: " << v.totalFinal << "\n";
+                  << " | Fecha: " << v.fecha
+                  << " | Categoría: " << v.categoria
+                  << " | Total: " << v.totalFinal << "\n";
     }
 }
 

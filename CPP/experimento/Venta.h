@@ -5,17 +5,35 @@ using std::string;
 class Venta {
 public:
     string idVenta;
-    string idProducto;
-    string nombreProducto;
+    string fecha;
+    double montoUnit;
     int cantidad;
-    double precioUnitario;
+    string categoria;
+    string metodoPago;
+    string clienteID;
+    string pais;
+    double costoEnvio;
+    double descuento;
+    double impuesto;
+    double subtotal;
+    double totalConDescuento;
+    double totalConImpuesto;
     double totalFinal;
 
     Venta();
     Venta(const string& idVenta,
-          const string& idProducto,
+          const string& fecha,
+          double montoUnit,
           int cantidad,
-          double precioUnitario);
-
-    void calcularTotal();
+          const string& categoria,
+          const string& metodoPago,
+          const string& clienteID,
+          const string& pais,
+          double costoEnvio,
+          double descuento,
+          double impuesto,
+          double subtotal,
+          double totalConDescuento,
+          double totalConImpuesto,
+          double totalFinal);
 };
