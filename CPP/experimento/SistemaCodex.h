@@ -6,6 +6,7 @@ private:
     RegistroVentas registro;
 
     void pausar();
+    void limpiarPantalla();
 
 public:
     void menu();

@@ -12,5 +12,8 @@ public:
     double ventasTotales() const;
     Venta ventaMaxima() const;
     void mostrarTodas() const;
-    Venta* buscarVenta(const string& id);
+    void mostrarTabla() const;
+    void mostrarDetalleVenta(const Venta& v) const;
+    Venta* buscarVenta(const std::string& id);
+    const std::vector<Venta>& obtenerVentas() const { return ventas; }
 };

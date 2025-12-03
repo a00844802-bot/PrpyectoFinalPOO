@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 
 bool RegistroVentas::cargarCSV(const std::string& nombreArchivo) {
     ventas.clear();
@@ -21,7 +22,6 @@ bool RegistroVentas::cargarCSV(const std::string& nombreArchivo) {
                     clienteID, pais, costoStr, descStr, impStr, subStr,
                     totalDescStr, totalImpStr, totalFinStr;
 
-        // Leer las 15 columnas separadas por comas
         getline(ss, idVenta, ',');
         getline(ss, fecha, ',');
         getline(ss, montoStr, ',');
@@ -38,7 +38,6 @@ bool RegistroVentas::cargarCSV(const std::string& nombreArchivo) {
         getline(ss, totalImpStr, ',');
         getline(ss, totalFinStr, ',');
 
-        // Convertir strings a números
         double monto = std::stod(montoStr);
         int cantidad = std::stoi(cantStr);
         double costo = std::stod(costoStr);
@@ -80,12 +79,71 @@ void RegistroVentas::mostrarTodas() const {
     for (const auto& v : ventas) {
         std::cout << "ID: " << v.idVenta
                   << " | Fecha: " << v.fecha
-                  << " | Categoría: " << v.categoria
+                  << " | Categoria: " << v.categoria
                   << " | Total: " << v.totalFinal << "\n";
     }
 }
 
-Venta* RegistroVentas::buscarVenta(const string& id) {
+void RegistroVentas::mostrarTabla() const {
+    // Encabezado
+    std::cout << "\n";
+    std::cout << std::left
+              << std::setw(8) << "ID"
+              << std::setw(13) << "Fecha"
+              << std::setw(16) << "Categoria"
+              << std::setw(16) << "Pais"
+              << std::setw(10) << "Cantidad"
+              << std::setw(14) << "Total"
+              << "\n";
+    std::cout << std::string(77, '-') << "\n";
+
+    // Filas
+    for (const auto& v : ventas) {
+        std::cout << std::left
+                  << std::setw(8) << v.idVenta
+                  << std::setw(13) << v.fecha.substr(0, 10)
+                  << std::setw(16) << v.categoria
+                  << std::setw(16) << v.pais
+                  << std::setw(10) << v.cantidad
+                  << "$" << std::fixed << std::setprecision(2) << v.totalFinal
+                  << "\n";
+    }
+    std::cout << std::string(77, '-') << "\n";
+}
+
+void RegistroVentas::mostrarDetalleVenta(const Venta& v) const {
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|                   DETALLE DE VENTA                         |\n";
+    std::cout << "+============================================================+\n\n";
+    
+    std::cout << std::left << std::setw(25) << "ID:" << v.idVenta << "\n";
+    std::cout << std::left << std::setw(25) << "Fecha:" << v.fecha << "\n";
+    std::cout << std::left << std::setw(25) << "Categoria:" << v.categoria << "\n";
+    std::cout << std::left << std::setw(25) << "Metodo de pago:" << v.metodoPago << "\n";
+    std::cout << std::left << std::setw(25) << "Cliente ID:" << v.clienteID << "\n";
+    std::cout << std::left << std::setw(25) << "Pais:" << v.pais << "\n";
+    
+    std::cout << std::string(60, '-') << "\n";
+    
+    std::cout << std::left << std::setw(25) << "Monto unitario:" 
+              << "$" << std::fixed << std::setprecision(2) << v.montoUnit << "\n";
+    std::cout << std::left << std::setw(25) << "Cantidad:" << v.cantidad << "\n";
+    std::cout << std::left << std::setw(25) << "Subtotal:" 
+              << "$" << v.subtotal << "\n";
+    std::cout << std::left << std::setw(25) << "Costo envio:" 
+              << "$" << v.costoEnvio << "\n";
+    std::cout << std::left << std::setw(25) << "Descuento:" 
+              << "$" << v.descuento << "\n";
+    std::cout << std::left << std::setw(25) << "Impuesto:" 
+              << "$" << v.impuesto << "\n";
+    
+    std::cout << std::string(60, '=') << "\n";
+    
+    std::cout << std::left << std::setw(25) << "TOTAL FINAL:" 
+              << "$" << v.totalFinal << "\n\n";
+}
+
+Venta* RegistroVentas::buscarVenta(const std::string& id) {
     for (auto& v : ventas) {
         if (v.idVenta == id)
             return &v;
