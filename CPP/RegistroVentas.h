@@ -15,5 +15,4 @@ public:
     double promedioVentas() const;
     Venta ventaMaxima() const;
 
-    // más algoritmos avanzados después
 };

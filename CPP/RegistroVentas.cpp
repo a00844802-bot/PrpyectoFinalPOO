@@ -44,8 +44,8 @@ bool RegistroVentas::cargarCSV(const std::string &ruta) {
         v.montoUnitario = std::stod(std::string(cols[2]));
         v.cantidad = std::stoi(std::string(cols[3]));
 
-        v.categoria = Categoria::Supermercado; // luego se mapeará
-        v.metodoPago = MetodoPago::Tarjeta;   // luego se mapeará
+        v.categoria = Categoria::Supermercado; 
+        v.metodoPago = MetodoPago::Tarjeta;   
 
         v.clienteID = std::stoi(std::string(cols[6]));
         v.pais = std::string(cols[7]);

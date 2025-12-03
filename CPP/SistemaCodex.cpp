@@ -4,7 +4,7 @@
 void SistemaCodex::menu() {
     int opc;
     do {
-        std::cout << "\n===== Codex Product Platform =====\n";
+        std::cout << "\nCodex Product Platform\n";
         std::cout << "1. Cargar archivo ventas_codex_platform.csv\n";
         std::cout << "2. Ventas totales\n";
         std::cout << "3. Venta máxima\n";
