@@ -3,6 +3,9 @@
 // Version inicial
 
 #include "SistemaCodex.h"
+#include "Enums.cpp"
+#include "RegistroVentas.cpp"
+#include "SistemaCodex.cpp"
 
 int main() {
     SistemaCodex app;
