@@ -18,6 +18,153 @@ void SistemaCodex::limpiarPantalla() {
     #endif
 }
 
+void SistemaCodex::menuFiltros() {
+    int opc;
+    do {
+        limpiarPantalla();
+        std::cout << "\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "|                  MENU DE FILTROS                           |\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "\n";
+        std::cout << "  [1] Filtrar por pais\n";
+        std::cout << "  [2] Filtrar por categoria\n";
+        std::cout << "  [3] Filtrar por rango de fechas\n";
+        std::cout << "  [0] Volver al menu principal\n";
+        std::cout << "\n";
+        std::cout << "  Opcion: ";
+        std::cin >> opc;
+
+        limpiarPantalla();
+
+        if (opc == 1) {
+            // Mostrar países disponibles
+            auto paises = registro.obtenerPaisesUnicos();
+            std::cout << "\nPaises disponibles:\n";
+            std::cout << std::string(40, '-') << "\n";
+            for (size_t i = 0; i < paises.size(); i++) {
+                std::cout << "  [" << (i+1) << "] " << paises[i] << "\n";
+            }
+            std::cout << std::string(40, '-') << "\n";
+            
+            int opcionPais;
+            std::cout << "\nSelecciona el numero del pais: ";
+            std::cin >> opcionPais;
+            
+            if (opcionPais < 1 || opcionPais > (int)paises.size()) {
+                std::cout << "\n[X] Opcion invalida.\n";
+                pausar();
+                continue;
+            }
+            
+            std::string pais = paises[opcionPais - 1];
+            
+            auto ventasFiltradas = registro.filtrarPorPais(pais);
+            std::cout << "\n+============================================================+\n";
+            std::cout << "|              VENTAS FILTRADAS POR PAIS                     |\n";
+            std::cout << "+============================================================+\n";
+            registro.mostrarTablaFiltrada(ventasFiltradas);
+            pausar();
+        }
+        else if (opc == 2) {
+            // Mostrar categorías disponibles
+            auto categorias = registro.obtenerCategoriasUnicas();
+            std::cout << "\nCategorias disponibles:\n";
+            std::cout << std::string(40, '-') << "\n";
+            for (size_t i = 0; i < categorias.size(); i++) {
+                std::cout << "  [" << (i+1) << "] " << categorias[i] << "\n";
+            }
+            std::cout << std::string(40, '-') << "\n";
+            
+            int opcionCategoria;
+            std::cout << "\nSelecciona el numero de la categoria: ";
+            std::cin >> opcionCategoria;
+            
+            if (opcionCategoria < 1 || opcionCategoria > (int)categorias.size()) {
+                std::cout << "\n[X] Opcion invalida.\n";
+                pausar();
+                continue;
+            }
+            
+            std::string categoria = categorias[opcionCategoria - 1];
+            
+            auto ventasFiltradas = registro.filtrarPorCategoria(categoria);
+            std::cout << "\n+============================================================+\n";
+            std::cout << "|           VENTAS FILTRADAS POR CATEGORIA                   |\n";
+            std::cout << "+============================================================+\n";
+            registro.mostrarTablaFiltrada(ventasFiltradas);
+            pausar();
+        }
+        else if (opc == 3) {
+            std::string fechaInicio, fechaFin;
+            std::cout << "\nIngresa fecha inicio (YYYY-MM-DD): ";
+            std::cin >> fechaInicio;
+            std::cout << "Ingresa fecha fin (YYYY-MM-DD): ";
+            std::cin >> fechaFin;
+            
+            auto ventasFiltradas = registro.filtrarPorRangoFechas(fechaInicio, fechaFin);
+            std::cout << "\n+============================================================+\n";
+            std::cout << "|           VENTAS FILTRADAS POR FECHAS                      |\n";
+            std::cout << "+============================================================+\n";
+            std::cout << "Rango: " << fechaInicio << " a " << fechaFin << "\n";
+            registro.mostrarTablaFiltrada(ventasFiltradas);
+            pausar();
+        }
+
+    } while (opc != 0);
+}
+
+void SistemaCodex::menuEstadisticas() {
+    int opc;
+    do {
+        limpiarPantalla();
+        std::cout << "\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "|                MENU DE ESTADISTICAS                        |\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "\n";
+        std::cout << "  [1] Estadisticas por pais especifico\n";
+        std::cout << "  [2] Estadisticas de todos los paises\n";
+        std::cout << "  [0] Volver al menu principal\n";
+        std::cout << "\n";
+        std::cout << "  Opcion: ";
+        std::cin >> opc;
+
+        limpiarPantalla();
+
+        if (opc == 1) {
+            // Mostrar países disponibles
+            auto paises = registro.obtenerPaisesUnicos();
+            std::cout << "\nPaises disponibles:\n";
+            std::cout << std::string(40, '-') << "\n";
+            for (size_t i = 0; i < paises.size(); i++) {
+                std::cout << "  [" << (i+1) << "] " << paises[i] << "\n";
+            }
+            std::cout << std::string(40, '-') << "\n";
+            
+            int opcionPais;
+            std::cout << "\nSelecciona el numero del pais: ";
+            std::cin >> opcionPais;
+            
+            if (opcionPais < 1 || opcionPais > (int)paises.size()) {
+                std::cout << "\n[X] Opcion invalida.\n";
+                pausar();
+                continue;
+            }
+            
+            std::string pais = paises[opcionPais - 1];
+            
+            registro.mostrarEstadisticasPorPais(pais);
+            pausar();
+        }
+        else if (opc == 2) {
+            registro.mostrarEstadisticasTodosPaises();
+            pausar();
+        }
+
+    } while (opc != 0);
+}
+
 void SistemaCodex::menu() {
     int opc;
     do {
@@ -32,6 +179,8 @@ void SistemaCodex::menu() {
         std::cout << "  [3] Venta maxima\n";
         std::cout << "  [4] Buscar venta por ID\n";
         std::cout << "  [5] Mostrar todas las ventas\n";
+        std::cout << "  [6] Filtros (Pais, Categoria, Fechas)\n";
+        std::cout << "  [7] Estadisticas por paises\n";
         std::cout << "  [0] Salir\n";
         std::cout << "\n";
         std::cout << "  Opcion: ";
@@ -90,6 +239,12 @@ void SistemaCodex::menu() {
             
             registro.mostrarTabla();
             pausar();
+        }
+        else if (opc == 6) {
+            menuFiltros();
+        }
+        else if (opc == 7) {
+            menuEstadisticas();
         }
 
     } while (opc != 0);

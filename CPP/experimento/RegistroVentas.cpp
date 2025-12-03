@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
+#include <set>
 
 bool RegistroVentas::cargarCSV(const std::string& nombreArchivo) {
     ventas.clear();
@@ -85,7 +87,6 @@ void RegistroVentas::mostrarTodas() const {
 }
 
 void RegistroVentas::mostrarTabla() const {
-    // Encabezado
     std::cout << "\n";
     std::cout << std::left
               << std::setw(8) << "ID"
@@ -97,7 +98,6 @@ void RegistroVentas::mostrarTabla() const {
               << "\n";
     std::cout << std::string(77, '-') << "\n";
 
-    // Filas
     for (const auto& v : ventas) {
         std::cout << std::left
                   << std::setw(8) << v.idVenta
@@ -149,4 +149,185 @@ Venta* RegistroVentas::buscarVenta(const std::string& id) {
             return &v;
     }
     return nullptr;
+}
+
+// ==================== NUEVAS FUNCIONALIDADES ====================
+
+std::vector<Venta> RegistroVentas::filtrarPorPais(const std::string& pais) const {
+    std::vector<Venta> resultado;
+    for (const auto& v : ventas) {
+        if (v.pais == pais) {
+            resultado.push_back(v);
+        }
+    }
+    return resultado;
+}
+
+std::vector<Venta> RegistroVentas::filtrarPorCategoria(const std::string& categoria) const {
+    std::vector<Venta> resultado;
+    for (const auto& v : ventas) {
+        if (v.categoria == categoria) {
+            resultado.push_back(v);
+        }
+    }
+    return resultado;
+}
+
+std::vector<Venta> RegistroVentas::filtrarPorRangoFechas(const std::string& fechaInicio, const std::string& fechaFin) const {
+    std::vector<Venta> resultado;
+    for (const auto& v : ventas) {
+        if (v.fecha >= fechaInicio && v.fecha <= fechaFin) {
+            resultado.push_back(v);
+        }
+    }
+    return resultado;
+}
+
+EstadisticasPais RegistroVentas::calcularEstadisticasPais(const std::string& pais) const {
+    EstadisticasPais stats;
+    stats.nombrePais = pais;
+    stats.total = 0;
+    stats.cantidad = 0;
+    stats.maximo = 0;
+    stats.minimo = 999999999;
+    
+    for (const auto& v : ventas) {
+        if (v.pais == pais) {
+            stats.total += v.totalFinal;
+            stats.cantidad++;
+            
+            if (v.totalFinal > stats.maximo) {
+                stats.maximo = v.totalFinal;
+            }
+            if (v.totalFinal < stats.minimo) {
+                stats.minimo = v.totalFinal;
+            }
+        }
+    }
+    
+    if (stats.cantidad > 0) {
+        stats.promedio = stats.total / stats.cantidad;
+    } else {
+        stats.promedio = 0;
+        stats.minimo = 0;
+    }
+    
+    return stats;
+}
+
+std::map<std::string, EstadisticasPais> RegistroVentas::calcularEstadisticasTodosPaises() const {
+    std::map<std::string, EstadisticasPais> estadisticas;
+    
+    std::set<std::string> paises;
+    for (const auto& v : ventas) {
+        paises.insert(v.pais);
+    }
+    
+    for (const auto& pais : paises) {
+        estadisticas[pais] = calcularEstadisticasPais(pais);
+    }
+    
+    return estadisticas;
+}
+
+void RegistroVentas::mostrarTablaFiltrada(const std::vector<Venta>& ventasFiltradas) const {
+    if (ventasFiltradas.empty()) {
+        std::cout << "\n[!] No se encontraron ventas con los criterios especificados.\n";
+        return;
+    }
+    
+    std::cout << "\n";
+    std::cout << std::left
+              << std::setw(8) << "ID"
+              << std::setw(13) << "Fecha"
+              << std::setw(16) << "Categoria"
+              << std::setw(16) << "Pais"
+              << std::setw(10) << "Cantidad"
+              << std::setw(14) << "Total"
+              << "\n";
+    std::cout << std::string(77, '-') << "\n";
+
+    for (const auto& v : ventasFiltradas) {
+        std::cout << std::left
+                  << std::setw(8) << v.idVenta
+                  << std::setw(13) << v.fecha.substr(0, 10)
+                  << std::setw(16) << v.categoria
+                  << std::setw(16) << v.pais
+                  << std::setw(10) << v.cantidad
+                  << "$" << std::fixed << std::setprecision(2) << v.totalFinal
+                  << "\n";
+    }
+    std::cout << std::string(77, '-') << "\n";
+    std::cout << "Total de ventas encontradas: " << ventasFiltradas.size() << "\n";
+}
+
+void RegistroVentas::mostrarEstadisticasPorPais(const std::string& pais) const {
+    EstadisticasPais stats = calcularEstadisticasPais(pais);
+    
+    if (stats.cantidad == 0) {
+        std::cout << "\n[!] No hay ventas registradas para el pais: " << pais << "\n";
+        return;
+    }
+    
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|              ESTADISTICAS POR PAIS: " << std::left << std::setw(19) << pais << "|\n";
+    std::cout << "+============================================================+\n\n";
+    
+    std::cout << std::left << std::setw(25) << "Pais:" << stats.nombrePais << "\n";
+    std::cout << std::left << std::setw(25) << "Cantidad de ventas:" << stats.cantidad << "\n";
+    std::cout << std::left << std::setw(25) << "Total vendido:" 
+              << "$" << std::fixed << std::setprecision(2) << stats.total << "\n";
+    std::cout << std::left << std::setw(25) << "Promedio por venta:" 
+              << "$" << stats.promedio << "\n";
+    std::cout << std::left << std::setw(25) << "Venta maxima:" 
+              << "$" << stats.maximo << "\n";
+    std::cout << std::left << std::setw(25) << "Venta minima:" 
+              << "$" << stats.minimo << "\n\n";
+}
+
+void RegistroVentas::mostrarEstadisticasTodosPaises() const {
+    auto estadisticas = calcularEstadisticasTodosPaises();
+    
+    std::cout << "\n+=======================================================================================+\n";
+    std::cout << "|                         ESTADISTICAS POR TODOS LOS PAISES                            |\n";
+    std::cout << "+=======================================================================================+\n\n";
+    
+    std::cout << std::left
+              << std::setw(18) << "Pais"
+              << std::setw(10) << "Ventas"
+              << std::setw(15) << "Total"
+              << std::setw(15) << "Promedio"
+              << std::setw(15) << "Maximo"
+              << std::setw(15) << "Minimo"
+              << "\n";
+    std::cout << std::string(88, '-') << "\n";
+    
+    for (const auto& pair : estadisticas) {
+        const EstadisticasPais& stats = pair.second;
+        std::cout << std::left
+                  << std::setw(18) << stats.nombrePais
+                  << std::setw(10) << stats.cantidad
+                  << "$" << std::setw(14) << std::fixed << std::setprecision(2) << stats.total
+                  << "$" << std::setw(14) << stats.promedio
+                  << "$" << std::setw(14) << stats.maximo
+                  << "$" << std::setw(14) << stats.minimo
+                  << "\n";
+    }
+    std::cout << std::string(88, '-') << "\n";
+}
+
+std::vector<std::string> RegistroVentas::obtenerPaisesUnicos() const {
+    std::set<std::string> paisesSet;
+    for (const auto& v : ventas) {
+        paisesSet.insert(v.pais);
+    }
+    return std::vector<std::string>(paisesSet.begin(), paisesSet.end());
+}
+
+std::vector<std::string> RegistroVentas::obtenerCategoriasUnicas() const {
+    std::set<std::string> categoriasSet;
+    for (const auto& v : ventas) {
+        categoriasSet.insert(v.categoria);
+    }
+    return std::vector<std::string>(categoriasSet.begin(), categoriasSet.end());
 }

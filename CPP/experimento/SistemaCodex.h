@@ -7,6 +7,8 @@ private:
 
     void pausar();
     void limpiarPantalla();
+    void menuFiltros();
+    void menuEstadisticas();
 
 public:
     void menu();
