@@ -181,6 +181,7 @@ void SistemaCodex::menu() {
         std::cout << "  [5] Mostrar todas las ventas\n";
         std::cout << "  [6] Filtros (Pais, Categoria, Fechas)\n";
         std::cout << "  [7] Estadisticas por paises\n";
+        std::cout << "  [8] Analisis Avanzado & Alertas\n";  
         std::cout << "  [0] Salir\n";
         std::cout << "\n";
         std::cout << "  Opcion: ";
@@ -246,8 +247,57 @@ void SistemaCodex::menu() {
         else if (opc == 7) {
             menuEstadisticas();
         }
+        else if (opc == 8) {
+            menuAnalisisAvanzado();  // NUEVO
+        }
 
     } while (opc != 0);
 
     std::cout << "\nSaliendo de Codex Product Platform...\n";
+}
+
+void SistemaCodex::menuAnalisisAvanzado() {
+    int opc;
+    do {
+        limpiarPantalla();
+        std::cout << "\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "|              ANALISIS AVANZADO & ALERTAS                   |\n";
+        std::cout << "+============================================================+\n";
+        std::cout << "\n";
+        std::cout << "  [1] Dashboard interactivo con graficos\n";
+        std::cout << "  [2] Sistema de alertas inteligente\n";
+        std::cout << "  [3] Detectar ventas atipicas\n";
+        std::cout << "  [0] Volver al menu principal\n";
+        std::cout << "\n";
+        std::cout << "  Opcion: ";
+        std::cin >> opc;
+
+        limpiarPantalla();
+
+        if (opc == 1) {
+            registro.mostrarDashboard();
+            pausar();
+        }
+        else if (opc == 2) {
+            registro.mostrarAlertas();
+            pausar();
+        }
+        else if (opc == 3) {
+            auto ventasAtipicas = registro.detectarVentasAtipicas();
+            
+            std::cout << "\n+============================================================+\n";
+            std::cout << "|                  VENTAS ATIPICAS DETECTADAS                |\n";
+            std::cout << "+============================================================+\n\n";
+            
+            if (ventasAtipicas.empty()) {
+                std::cout << "[✓] No se detectaron ventas atipicas.\n";
+            } else {
+                std::cout << "Se detectaron " << ventasAtipicas.size() << " ventas con valores inusuales:\n\n";
+                registro.mostrarTablaFiltrada(ventasAtipicas);
+            }
+            pausar();
+        }
+
+    } while (opc != 0);
 }

@@ -9,6 +9,7 @@ private:
     void limpiarPantalla();
     void menuFiltros();
     void menuEstadisticas();
+    void menuAnalisisAvanzado(); 
 
 public:
     void menu();
