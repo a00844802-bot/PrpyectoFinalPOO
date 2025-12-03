@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar SFML",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "C:\\Users\\diego\\OneDrive - Instituto Tecnologico y de Estudios Superiores de Monterrey\\Tec de Monterrey\\Primer semestre\\Periodos\\Periodo 5\\C.MTY.TC1033.313.2513.A00845422\\PrpyectoFinalPOO\\CPP\\App\\main.cpp",
+                "-IC:/Libraries/SFML/include",
+                "-LC:/Libraries/SFML/lib",
+                "-o",
+                "${fileDirname}/programa.exe",
+                "-lsfml-graphics",
+                "-lsfml-window",
+                "-lsfml-system"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Compilación con SFML"
+        }
+    ]
+}
